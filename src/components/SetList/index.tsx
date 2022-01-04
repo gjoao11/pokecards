@@ -1,26 +1,14 @@
-import { SetItem } from '../SetItem'
+import { ReactNode } from 'react'
 import styles from './styles.module.scss'
 
-interface Set {
-  id: string;
-  name: string;
-  series: string;
-  total: number;
-  images: {
-    symbol: string;
-  }
-}
-
 interface SetListProps {
-  sets: Set[];
+  children: ReactNode;
 }
 
-export function SetList({ sets }: SetListProps) {
+export function SetList({ children }: SetListProps) {
   return (
     <div className={styles.setListContainer}>
-      {sets.map(set => (
-        <SetItem key={set.id} set={set} />
-      ))}
+      {children}
     </div>
   )
 }

@@ -7,7 +7,7 @@ interface Set {
   series: string;
   total: number;
   images: {
-    symbol: string;
+    logo: string;
   }
 }
 
@@ -17,18 +17,21 @@ interface SetItemProps {
 
 export function SetItem({ set }: SetItemProps) {
   return (
-    <section className={styles.setItemContainer}>
-      <div className={styles.symbolContainer}>
+    <div className={styles.setItemContainer}>
+      <div className={styles.setLogoContainer}>
         <Image
-          src={set.images.symbol}
+          src={set.images.logo}
           alt={set.name}
-          width="100%"
-          height="100%"
+          layout="fill"
           objectFit="contain"
         />
       </div>
 
-      {set.name}
-    </section>
+      <div className={styles.setInfo}>
+        <strong>{set.name}</strong>
+
+        <span>{set.total} cards total</span>
+      </div>
+    </div>
   )
 }
