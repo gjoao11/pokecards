@@ -1,11 +1,14 @@
 import type { GetStaticProps } from 'next'
 import Head from 'next/head'
-import { useState } from 'react'
-import useInView from 'react-cool-inview'
-import { Header } from '../components/Header'
+import Link from 'next/link'
+import { useMemo, useRef } from 'react'
+import { useInfiniteQuery } from 'react-query'
+
 import { SetItem } from '../components/SetItem'
 import { SetList } from '../components/SetList'
+import { useIntersectionObserver } from '../hooks/useIntersectionObserver'
 import { api } from '../services/api'
+
 import styles from './Home.module.scss'
 
 interface Set {
@@ -18,39 +21,57 @@ interface Set {
   }
 }
 
-interface HomeProps {
-  sets: Set[];
-  pageSize: number;
-  lastPage: number;
+interface PageData {
+  data: Set[];
+  page: number;
 }
 
-export default function Home({ sets, pageSize, lastPage }: HomeProps) {
-  const [updatedSets, setUpdatedSets] = useState(sets.reverse())
-  const [currentPage, setCurrentPage] = useState(lastPage - 1)
+interface HomeProps {
+  numberOfPages: number;
+}
 
-  const { observe } = useInView({
-    rootMargin: "400px 0px",
-    onEnter: ({ unobserve }) => {
-      unobserve();
+export default function Home({ numberOfPages }: HomeProps) {
+  const fetchSets = async ({ pageParam = 1 }): Promise<PageData> => {
+    const response = await api.get('/sets', {
+      params: {
+        pageSize: 12,
+        page: pageParam,
+        orderBy: '-releaseDate',
+      },
+    });
 
-      setCurrentPage(currentPage - 1)
+    return response.data;
+  }
 
-      if (currentPage <= 0) {
-        return
-      }
-
-      api.get('/sets', {
-        params: {
-          page: currentPage,
-          pageSize,
-          orderBy: 'releaseDate',
-        }
-      }).then(response => {
-        const { data: newSets } = response.data
-        setUpdatedSets([...updatedSets, ...newSets.reverse()])
-      })
-    },
+  const {
+    data,
+    isError,
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteQuery('sets', fetchSets, {
+    getNextPageParam: lastPage => (
+      lastPage.page < numberOfPages ? lastPage.page + 1 : null
+    )
   })
+
+  const updatedSets = useMemo(() => {
+    const formattedArray = data?.pages.map(page => page.data).flat();
+
+    return formattedArray;
+  }, [data]);
+
+  const infiniteScrollDivRef = useRef(null)
+
+  useIntersectionObserver({
+    target: infiniteScrollDivRef,
+    onIntersect: fetchNextPage,
+    enabled: hasNextPage,
+  })
+
+  if (isError) {
+    return <span>Há algo de errado.</span>
+  }
 
   return (
     <>
@@ -58,48 +79,40 @@ export default function Home({ sets, pageSize, lastPage }: HomeProps) {
         <title>Sets - PokéCards</title>
       </Head>
 
-      <Header />
-
       <main className={styles.contentContainer}>
         <h1>Pokémon TCG sets</h1>
 
         <SetList>
-          {updatedSets.map((set) => (
-            <div
-              ref={currentPage > 0 ? observe : null}
-              key={set.id}>
-              <SetItem set={set} />
-            </div>
+          {updatedSets?.map((set) => (
+            <Link key={set.id} href={`/sets/${set.id}`} >
+              <a><SetItem set={set} /></a>
+            </Link>
           ))}
         </SetList>
+
+        <div ref={infiniteScrollDivRef}>
+          {isFetchingNextPage && <span>Carregando...</span>}
+        </div>
       </main>
     </>
   )
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const { data: { totalCount } } = await api.get('/sets', {
-    params: { pageSize: 12 }
-  })
-
   const pageSize = 12
-  const lastPage = Math.ceil(totalCount / pageSize)
 
   const response = await api.get('/sets', {
     params: {
-      page: lastPage,
       pageSize,
-      orderBy: 'releaseDate',
     }
   })
 
-  const { data: sets } = await response.data
+  const { totalCount } = await response.data
+  const numberOfPages = Math.ceil(totalCount / pageSize)
 
   return {
     props: {
-      sets,
-      pageSize,
-      lastPage,
+      numberOfPages,
     },
     revalidate: 60 * 60 * 24, // 24 hours
   }
