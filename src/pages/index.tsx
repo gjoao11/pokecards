@@ -70,7 +70,7 @@ export default function Home({ numberOfPages }: HomeProps) {
   })
 
   if (isError) {
-    return <span>Há algo de errado.</span>
+    return <span>There&apos;s something wrong.</span>
   }
 
   return (
@@ -91,7 +91,7 @@ export default function Home({ numberOfPages }: HomeProps) {
         </SetList>
 
         <div ref={infiniteScrollDivRef}>
-          {isFetchingNextPage && <span>Carregando...</span>}
+          {isFetchingNextPage && <span>Loading...</span>}
         </div>
       </main>
     </>
