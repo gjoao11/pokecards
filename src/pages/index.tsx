@@ -1,4 +1,3 @@
-import type { GetStaticProps } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useMemo, useRef } from 'react'
@@ -24,13 +23,10 @@ interface Set {
 interface PageData {
   data: Set[];
   page: number;
+  totalCount: number;
 }
 
-interface HomeProps {
-  numberOfPages: number;
-}
-
-export default function Home({ numberOfPages }: HomeProps) {
+export default function Home() {
   const fetchSets = async ({ pageParam = 1 }): Promise<PageData> => {
     const response = await api.get('/sets', {
       params: {
@@ -50,9 +46,12 @@ export default function Home({ numberOfPages }: HomeProps) {
     fetchNextPage,
     hasNextPage,
   } = useInfiniteQuery('sets', fetchSets, {
-    getNextPageParam: lastPage => (
-      lastPage.page < numberOfPages ? lastPage.page + 1 : null
-    )
+    getNextPageParam: lastPage => {
+      const numberOfPages = Math.ceil(lastPage.totalCount / 12)
+
+      return lastPage.page < numberOfPages ? lastPage.page + 1 : null
+    },
+    refetchInterval: 1000 * 60 * 60 * 24, // 24 hours
   })
 
   const updatedSets = useMemo(() => {
@@ -96,24 +95,4 @@ export default function Home({ numberOfPages }: HomeProps) {
       </main>
     </>
   )
-}
-
-export const getStaticProps: GetStaticProps = async () => {
-  const pageSize = 12
-
-  const response = await api.get('/sets', {
-    params: {
-      pageSize,
-    }
-  })
-
-  const { totalCount } = await response.data
-  const numberOfPages = Math.ceil(totalCount / pageSize)
-
-  return {
-    props: {
-      numberOfPages,
-    },
-    revalidate: 60 * 60 * 24, // 24 hours
-  }
 }

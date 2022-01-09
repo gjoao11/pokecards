@@ -7,3 +7,24 @@
   flex-direction: column;
   gap: 2rem;
 }
+
+.returnButton {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+
+  margin-top: 1rem;
+  margin-left: 1rem;
+  background: transparent;
+
+  span {
+    color: #b4b4b6;
+    font-size: 1.05rem;
+  }
+
+  transition: filter 0.2s;
+
+  &:hover {
+    filter: brightness(2);
+  }
+}

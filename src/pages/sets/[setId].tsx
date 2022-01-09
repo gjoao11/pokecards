@@ -2,13 +2,15 @@ import { GetStaticPaths, GetStaticProps } from 'next'
 import Head from 'next/head'
 import { useMemo, useRef } from 'react'
 import { useInfiniteQuery } from 'react-query'
-import { CardItem } from '../../components/CardItem'
+import { FiArrowLeft } from 'react-icons/fi'
 
 import { CardList } from '../../components/CardList'
+import { CardItem } from '../../components/CardItem'
 import { useIntersectionObserver } from '../../hooks/useIntersectionObserver'
 import { api } from '../../services/api'
 
 import styles from './Set.module.scss'
+import { useRouter } from 'next/router'
 
 interface Set {
   id: string;
@@ -40,6 +42,8 @@ interface SetProps {
 }
 
 export default function Set({ set }: SetProps) {
+  const router = useRouter()
+
   const fetchSets = async ({ pageParam = 1 }): Promise<PageData> => {
     const response = await api.get('/cards', {
       params: {
@@ -48,7 +52,7 @@ export default function Set({ set }: SetProps) {
         page: pageParam,
       },
     });
-    console.log(set.id)
+
     return response.data;
   }
 
@@ -63,7 +67,8 @@ export default function Set({ set }: SetProps) {
       const numberOfPages = Math.ceil(lastPage.totalCount / 12)
 
       return lastPage.page < numberOfPages ? lastPage.page + 1 : null
-    }
+    },
+    refetchInterval: 1000 * 60 * 60 * 24, // 24 hours
   })
 
   const updatedCards = useMemo(() => {
@@ -89,6 +94,11 @@ export default function Set({ set }: SetProps) {
       <Head>
         <title>{set.name} - PokéCards</title>
       </Head>
+
+      <button className={styles.returnButton} onClick={router.back}>
+        <FiArrowLeft size={20} color="#b4b4b6" />
+        <span>Home</span>
+      </button>
 
       <main className={styles.contentContainer}>
         <h1>{set.series} - {set.name}</h1>
