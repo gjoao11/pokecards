@@ -18,18 +18,24 @@ interface SetItemProps {
 export function SetItem({ set }: SetItemProps) {
   return (
     <div className={styles.setItemContainer}>
-      <div className={styles.setLogoContainer}>
-        <Image
-          src={set.images.logo}
-          alt={set.name}
-          layout="fill"
-          objectFit="contain"
-        />
+      <div className={styles.leftSideContainer}>
+        <div className={styles.setLogoContainer}>
+          <Image
+            src={set.images.logo}
+            alt={set.name}
+            layout="fill"
+            objectFit="contain"
+          />
+        </div>
+
+        <div className={styles.setInfo}>
+          <strong>{set.name}</strong>
+
+          <span>{set.series} Series</span>
+        </div>
       </div>
 
-      <div className={styles.setInfo}>
-        <strong>{set.name}</strong>
-
+      <div className={styles.rightSideContainer}>
         <span>{set.total} cards total</span>
       </div>
     </div>

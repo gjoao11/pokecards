@@ -1,8 +1,14 @@
-.contentContainer {
+.container {
   max-width: 1120px;
   margin: 4rem auto;
   padding: 0 2rem;
 
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.contentContainer {
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -13,8 +19,6 @@
   align-items: center;
   gap: 0.2rem;
 
-  margin-top: 1rem;
-  margin-left: 1rem;
   background: transparent;
 
   span {

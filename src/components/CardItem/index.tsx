@@ -1,5 +1,4 @@
 import Image from 'next/image'
-import styles from './styles.module.scss'
 
 interface Card {
   id: string;
@@ -16,12 +15,12 @@ interface CardItemProps {
 
 export function CardItem({ card }: CardItemProps) {
   return (
-    <div className={styles.cardItemContainer}>
+    <div>
       <Image
         src={card.images.small}
         alt={card.name}
         width="100%"
-        height="120%"
+        height="140%"
         layout="responsive"
       />
     </div>

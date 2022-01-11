@@ -95,24 +95,26 @@ export default function Set({ set }: SetProps) {
         <title>{set.name} - PokéCards</title>
       </Head>
 
-      <button className={styles.returnButton} onClick={router.back}>
-        <FiArrowLeft size={20} color="#b4b4b6" />
-        <span>Home</span>
-      </button>
+      <div className={styles.container}>
+        <button className={styles.returnButton} onClick={router.back}>
+          <FiArrowLeft size={20} color="#b4b4b6" />
+          <span>Home</span>
+        </button>
 
-      <main className={styles.contentContainer}>
-        <h1>{set.series} - {set.name}</h1>
+        <main className={styles.contentContainer}>
+          <h1>{set.series} - {set.name}</h1>
 
-        <CardList>
-          {updatedCards?.map(card => (
-            <CardItem key={card.id} card={card} />
-          ))}
-        </CardList>
+          <CardList>
+            {updatedCards?.map(card => (
+              <CardItem key={card.id} card={card} />
+            ))}
+          </CardList>
 
-        <div ref={infiniteScrollDivRef}>
-          {isFetchingNextPage && <span>Loading...</span>}
-        </div>
-      </main>
+          <div ref={infiniteScrollDivRef}>
+            {isFetchingNextPage && <span>Loading...</span>}
+          </div>
+        </main>
+      </div>
     </>
   )
 }

@@ -1,45 +1,55 @@
 .setItemContainer {
+  width: 100%;
+  position: relative;
+  padding: 1.5rem 0;
+
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   gap: 1rem;
 
-  position: relative;
-
-  height: 14rem;
-  background-color: #222224;
-  border-radius: 8px;
-  cursor: pointer;
-
-  transition: filter 0.2s;
+  border-top: 1px solid #202022;
 
   &:hover {
-    filter: brightness(1.4);
+    .setInfo {
+      strong {
+        color: #A32EFF;
+      }
+    }
+  }
+}
+
+.leftSideContainer {
+  display: flex;
+  justify-content: center;
+  gap: 1.4rem;
+
+  .setInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    strong {
+      font-size: 1.75rem;
+
+      transition: color 0.2s;
+    }
+
+    span {
+      color: #b4b4b6;
+    }
   }
 }
 
 .setLogoContainer {
-  flex: 1;
-  align-self: center;
   position: relative;
-  width: 75%;
+  height: 4rem;
+  width: 12rem;
 }
 
-.setInfo {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.4rem;
-
-  background-color: #18181A;
-  padding: 0.5rem 1rem;
-  border-radius: 0 0 8px 8px;
-
-  strong {
-    font-size: 1.25rem;
-  }
-
+.rightSideContainer {
   span {
     color: #b4b4b6;
+    font-weight: 300;
   }
 }
- 

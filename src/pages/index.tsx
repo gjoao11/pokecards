@@ -78,21 +78,23 @@ export default function Home() {
         <title>Sets - PokéCards</title>
       </Head>
 
-      <main className={styles.contentContainer}>
-        <h1>Pokémon TCG sets</h1>
+      <div className={styles.container}>
+        <main className={styles.contentContainer}>
+          <h1>Pokémon TCG sets</h1>
 
-        <SetList>
-          {updatedSets?.map((set) => (
-            <Link key={set.id} href={`/sets/${set.id}`} >
-              <a><SetItem set={set} /></a>
-            </Link>
-          ))}
-        </SetList>
+          <SetList>
+            {updatedSets?.map((set) => (
+              <Link key={set.id} href={`/sets/${set.id}`} >
+                <a><SetItem set={set} /></a>
+              </Link>
+            ))}
+          </SetList>
 
-        <div ref={infiniteScrollDivRef}>
-          {isFetchingNextPage && <span>Loading...</span>}
-        </div>
-      </main>
+          <div ref={infiniteScrollDivRef}>
+            {isFetchingNextPage && <span>Loading...</span>}
+          </div>
+        </main>
+      </div>
     </>
   )
 }
