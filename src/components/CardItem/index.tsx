@@ -1,9 +1,12 @@
 import Image from 'next/image'
 
+import styles from './styles.module.scss'
+
 interface Card {
   id: string;
   name: string;
   supertype: string;
+  types: string;
   images: {
     small: string;
   }
@@ -15,7 +18,7 @@ interface CardItemProps {
 
 export function CardItem({ card }: CardItemProps) {
   return (
-    <div>
+    <div className={`${styles.cardItemContainer} ${styles[card.types]}`}>
       <Image
         src={card.images.small}
         alt={card.name}

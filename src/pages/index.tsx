@@ -1,7 +1,8 @@
+import { GetServerSideProps } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
-import { useMemo, useRef } from 'react'
-import { useInfiniteQuery } from 'react-query'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { InfiniteData, InitialDataFunction, useInfiniteQuery } from 'react-query'
 
 import { SetItem } from '../components/SetItem'
 import { SetList } from '../components/SetList'
@@ -51,11 +52,11 @@ export default function Home() {
 
       return lastPage.page < numberOfPages ? lastPage.page + 1 : null
     },
-    refetchInterval: 1000 * 60 * 60 * 24, // 24 hours
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours
   })
 
   const updatedSets = useMemo(() => {
-    const formattedArray = data?.pages.map(page => page.data).flat();
+    const formattedArray = data?.pages?.map(page => page.data).flat();
 
     return formattedArray;
   }, [data]);
