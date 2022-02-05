@@ -10,10 +10,14 @@
 
   border-top: 1px solid #202022;
 
+  a:last-child > & {
+    border-bottom: 1px solid #202022;
+  }
+
   &:hover {
     .setInfo {
       strong {
-        color: #A32EFF;
+        color: #8d29ff;
       }
     }
   }
