@@ -1,0 +1,51 @@
+.container {
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+
+  border-bottom: 1px solid #202022;
+
+  & > div {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .title {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    span {
+      font-size: 1.25rem;
+    }
+
+    .abilityTag {
+      color: #8344ca;
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .cost {
+      display: flex;
+      gap: 6px;
+    }
+
+    .damage {
+      margin-left: auto;
+    }
+  }
+
+  .text {
+    font-weight: 300;
+    width: 80%;
+    display: inline-block;
+    letter-spacing: 0.2px;
+
+    @media screen and (max-width: 800px) {
+      width: 100%;
+      text-align: justify;
+    }
+  }
+}

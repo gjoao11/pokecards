@@ -1,40 +1,19 @@
+import { BackPageButton } from '@components/BackPageButton';
 import { CardItem } from '@components/CardItem';
 import { CardList } from '@components/CardList';
 import { api } from '@services/api';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-import { FiArrowLeft } from 'react-icons/fi';
+import Link from 'next/link';
+import { Card as CardType, Set as SetType } from 'src/types';
 import styles from './Set.module.scss';
 
-interface Set {
-  id: string;
-  name: string;
-  series: string;
-  total: number;
-  images: {
-    logo: string;
-  };
-}
-
-interface Card {
-  id: string;
-  name: string;
-  supertype: string;
-  types: string;
-  images: {
-    small: string;
-  };
-}
-
 interface SetProps {
-  set: Set;
-  cards?: Card[];
+  set: SetType;
+  cards?: CardType[];
 }
 
 export default function Set({ set, cards }: SetProps) {
-  const router = useRouter();
-
   return (
     <>
       <Head>
@@ -42,10 +21,9 @@ export default function Set({ set, cards }: SetProps) {
       </Head>
 
       <div className={styles.container}>
-        <button className={styles.returnButton} onClick={router.back}>
-          <FiArrowLeft size={20} color="#b4b4b6" />
-          <span>Home</span>
-        </button>
+        <div>
+          <BackPageButton />
+        </div>
 
         <main className={styles.contentContainer}>
           <h1>
@@ -54,7 +32,11 @@ export default function Set({ set, cards }: SetProps) {
 
           <CardList>
             {cards?.map(card => (
-              <CardItem key={card.id} card={card} />
+              <Link key={card.id} href={`/cards/${card.id}`}>
+                <a>
+                  <CardItem card={card} />
+                </a>
+              </Link>
             ))}
           </CardList>
         </main>
@@ -71,24 +53,41 @@ export const getStaticPaths: GetStaticPaths = async () => {
 };
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const setId = params?.setId;
+  const setID = params?.setID;
 
   try {
-    const setResponse = await api.get(`/sets/${String(setId)}`);
+    const { data: setResponse } = await api.get(`sets/${String(setID)}`);
+    const set: SetType = await setResponse.data;
 
-    const { data: set } = await setResponse.data;
-
-    const cardsResponse = await api.get('cards', {
-      params: { q: `set.id:${set.id}` },
+    const { data: cardsResponse } = await api.get('cards', {
+      params: {
+        q: `set.id:${set.id}`,
+        orderBy: 'number',
+        page: 1,
+      },
     });
-    const { data: cards } = await cardsResponse.data;
+    let cards: CardType[] = await cardsResponse.data;
+
+    if (cards.length < set.total) {
+      const restOfCardsResponse = await api.get('cards', {
+        params: {
+          q: `set.id:${set.id}`,
+          orderBy: 'number',
+          page: 2,
+        },
+      });
+
+      const { data: restOfCards } = await restOfCardsResponse.data;
+
+      cards = [...cards, ...restOfCards];
+    }
 
     return {
       props: {
         set,
         cards,
       },
-      revalidate: 60 * 60 * 24, // 24 hours
+      revalidate: 60 * 60 * 48, // 48 hours
     };
   } catch {
     return {

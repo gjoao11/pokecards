@@ -7,26 +7,17 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useMemo, useRef } from 'react';
 import { useInfiniteQuery } from 'react-query';
+import { Set as SetType } from 'src/types';
 import styles from './Home.module.scss';
 
-interface Set {
-  id: string;
-  name: string;
-  series: string;
-  total: number;
-  images: {
-    logo: string;
-  };
-}
-
 interface PageData {
-  data: Set[];
+  data: SetType[];
   page: number;
   totalCount: number;
 }
 
 interface HomeProps {
-  initialSets: Set[];
+  initialSets: SetType[];
 }
 
 export default function Home({ initialSets }: HomeProps) {

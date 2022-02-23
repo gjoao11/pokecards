@@ -1,24 +1,16 @@
-import Image from 'next/image'
-
-import styles from './styles.module.scss'
-
-interface Card {
-  id: string;
-  name: string;
-  supertype: string;
-  types: string;
-  images: {
-    small: string;
-  }
-}
+import Image from 'next/image';
+import { Card as CardType } from 'src/types';
+import styles from './styles.module.scss';
 
 interface CardItemProps {
-  card: Card;
+  card: CardType;
 }
 
 export function CardItem({ card }: CardItemProps) {
+  const mainType = !!card.types ? card.types[0] : '';
+
   return (
-    <div className={`${styles.cardItemContainer} ${styles[card.types]}`}>
+    <div className={`${styles.cardItemContainer} ${styles[mainType]}`}>
       <Image
         src={card.images.small}
         alt={card.name}
@@ -27,5 +19,5 @@ export function CardItem({ card }: CardItemProps) {
         layout="responsive"
       />
     </div>
-  )
+  );
 }

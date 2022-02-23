@@ -1,0 +1,29 @@
+.container {
+  border: 1px solid #202022;
+
+  display: flex;
+
+  > div {
+    flex: 0.5;
+  }
+}
+
+.left {
+  justify-self: flex-start;
+  border-right: 1px solid #202022;
+}
+
+.right {
+  justify-self: flex-end;
+  text-align: end;
+}
+
+.cardLink {
+  padding: 24px;
+
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #202022;
+  }
+}
