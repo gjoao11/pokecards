@@ -6,7 +6,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1rem;
+  gap: 16px;
 
   border-top: 1px solid #202022;
 
@@ -23,6 +23,24 @@
       strong {
         color: #8344ca;
       }
+    }
+  }
+
+  @media (max-width: 800px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+
+    .setLogoContainer {
+      display: none;
+    }
+
+    .setSymbolContainer {
+      display: inline-block;
+    }
+
+    .rightSideContainer {
+      width: 100%;
     }
   }
 }
@@ -47,12 +65,28 @@
       color: #b4b4b6;
     }
   }
+
+  @media (max-width: 800px) {
+    .setInfo {
+      strong {
+        font-size: 1.125rem;
+      }
+    }
+  }
 }
 
 .setLogoContainer {
   position: relative;
   height: 4rem;
   width: 12rem;
+}
+
+.setSymbolContainer {
+  position: relative;
+  min-height: 32px;
+  min-width: 32px;
+
+  display: none;
 }
 
 .rightSideContainer {

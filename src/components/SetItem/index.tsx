@@ -1,5 +1,5 @@
-import Image from 'next/image'
-import styles from './styles.module.scss'
+import Image from 'next/image';
+import styles from './styles.module.scss';
 
 interface Set {
   id: string;
@@ -8,7 +8,8 @@ interface Set {
   total: number;
   images: {
     logo: string;
-  }
+    symbol: string;
+  };
 }
 
 interface SetItemProps {
@@ -28,6 +29,15 @@ export function SetItem({ set }: SetItemProps) {
           />
         </div>
 
+        <div className={styles.setSymbolContainer}>
+          <Image
+            src={set.images.symbol}
+            alt={set.name}
+            layout="fill"
+            objectFit="contain"
+          />
+        </div>
+
         <div className={styles.setInfo}>
           <strong>{set.name}</strong>
 
@@ -39,5 +49,5 @@ export function SetItem({ set }: SetItemProps) {
         <span>{set.total} cards total</span>
       </div>
     </div>
-  )
+  );
 }
