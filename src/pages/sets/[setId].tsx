@@ -92,6 +92,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   } catch {
     return {
       notFound: true,
+      revalidate: 60, // 1 minute
     };
   }
 };

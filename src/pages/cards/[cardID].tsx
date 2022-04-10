@@ -3,7 +3,6 @@ import { PokemonCardDetails } from '@components/CardDetails/PokemonCardDetails';
 import { api } from '@services/api';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
 import { Card as CardType } from 'src/types';
 import styles from './Card.module.scss';
 
@@ -12,8 +11,6 @@ interface CardPageProps {
 }
 
 export default function CardPage({ card }: CardPageProps) {
-  const router = useRouter();
-
   return (
     <>
       <Head>
@@ -58,6 +55,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   } catch {
     return {
       notFound: true,
+      revalidate: 60, // 1 minute
     };
   }
 };
