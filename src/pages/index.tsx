@@ -76,7 +76,7 @@ export default function Home({ initialSets }: HomeProps) {
 
           <SetList>
             {updatedSets?.map(set => (
-              <Link key={set.id} href={`/sets/${set.id}`}>
+              <Link key={set.id} href={`/sets/${set.id}`} prefetch={false}>
                 <a>
                   <SetItem set={set} />
                 </a>
