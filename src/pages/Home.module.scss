@@ -11,4 +11,13 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
+
+  button {
+    background: transparent;
+    color: #e2e2e6;
+
+    &:disabled {
+      cursor: default;
+    }
+  }
 }

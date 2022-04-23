@@ -1,7 +1,7 @@
 import { SetItem } from '@components/SetItem';
 import { SetList } from '@components/SetList';
 import { useIntersectionObserver } from '@hooks/useIntersectionObserver';
-import { api } from '@services/api';
+import { api, apiRoutes } from '@services/api';
 import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -22,11 +22,9 @@ interface HomeProps {
 
 export default function Home({ initialSets }: HomeProps) {
   const fetchSets = async ({ pageParam = 1 }): Promise<PageData> => {
-    const response = await api.get('/sets', {
+    const response = await apiRoutes.get('/api/sets', {
       params: {
-        pageSize: 12,
         page: pageParam,
-        orderBy: '-releaseDate',
       },
     });
 
@@ -49,10 +47,10 @@ export default function Home({ initialSets }: HomeProps) {
     return formattedArray;
   }, [data]);
 
-  const infiniteScrollDivRef = useRef(null);
+  const infiniteScrollRef = useRef(null);
 
   useIntersectionObserver({
-    target: infiniteScrollDivRef,
+    target: infiniteScrollRef,
     onIntersect: fetchNextPage,
     enabled: hasNextPage,
   });
@@ -81,8 +79,18 @@ export default function Home({ initialSets }: HomeProps) {
             ))}
           </SetList>
 
-          <div ref={infiniteScrollDivRef}>
-            {isFetchingNextPage && <span>Loading...</span>}
+          <div>
+            <button
+              ref={infiniteScrollRef}
+              onClick={() => fetchNextPage()}
+              disabled={!hasNextPage || isFetchingNextPage}
+            >
+              {isFetchingNextPage
+                ? 'Loading more...'
+                : hasNextPage
+                ? 'Load Newer'
+                : 'Nothing more to load'}
+            </button>
           </div>
         </main>
       </div>
@@ -91,7 +99,7 @@ export default function Home({ initialSets }: HomeProps) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const response = await api.get('/sets', {
+  const response = await api.get('sets', {
     params: {
       pageSize: 12,
       page: 1,
