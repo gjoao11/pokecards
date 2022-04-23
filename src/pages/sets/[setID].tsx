@@ -32,7 +32,7 @@ export default function Set({ set, cards }: SetProps) {
 
           <CardList>
             {cards?.map(card => (
-              <Link key={card.id} href={`/cards/${card.id}`}>
+              <Link key={card.id} href={`/cards/${card.id}`} prefetch={false}>
                 <a>
                   <CardItem card={card} />
                 </a>

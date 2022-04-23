@@ -17,7 +17,7 @@ interface PageData {
 }
 
 interface HomeProps {
-  initialSets: SetType[];
+  initialSets: PageData;
 }
 
 export default function Home({ initialSets }: HomeProps) {
@@ -40,17 +40,14 @@ export default function Home({ initialSets }: HomeProps) {
         return lastPage.page < numberOfPages ? lastPage.page + 1 : null;
       },
       staleTime: 1000 * 60 * 60 * 24, // 24 hours
+      initialData: { pages: [initialSets], pageParams: [1] },
     });
 
   const updatedSets = useMemo(() => {
-    if (!data) {
-      return initialSets;
-    }
-
     const formattedArray = data?.pages?.map(page => page.data).flat();
 
     return formattedArray;
-  }, [data, initialSets]);
+  }, [data]);
 
   const infiniteScrollDivRef = useRef(null);
 
@@ -102,7 +99,7 @@ export const getStaticProps: GetStaticProps = async () => {
     },
   });
 
-  const { data: initialSets } = await response.data;
+  const { data: initialSets } = response;
 
   return {
     props: {
