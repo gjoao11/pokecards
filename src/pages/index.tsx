@@ -6,7 +6,7 @@ import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useMemo, useRef } from 'react';
-import { useInfiniteQuery } from 'react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { Set as SetType } from 'src/types';
 import styles from './Home.module.scss';
 
@@ -32,7 +32,7 @@ export default function Home({ initialSets }: HomeProps) {
   };
 
   const { data, isError, isFetchingNextPage, fetchNextPage, hasNextPage } =
-    useInfiniteQuery('sets', fetchSets, {
+    useInfiniteQuery(['sets'], fetchSets, {
       getNextPageParam: lastPage => {
         const numberOfPages = Math.ceil(lastPage.totalCount / 12);
         return lastPage.page < numberOfPages ? lastPage.page + 1 : null;
