@@ -1,7 +1,7 @@
-import { BackPageButton } from '@components/BackPageButton';
-import { CardItem } from '@components/CardItem';
-import { CardList } from '@components/CardList';
-import { api } from '@services/api';
+import { BackPageButton } from '@/components/BackPageButton';
+import { CardItem } from '@/components/CardItem';
+import { CardList } from '@/components/CardList';
+import { api } from '@/services/api';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';

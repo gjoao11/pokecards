@@ -29,14 +29,7 @@ export function PokemonCardDetails({ card }: PokemonCardProps) {
   return (
     <div className={styles.cardDetailsContainer}>
       <div className={styles.cardImage}>
-        <Image
-          src={card.images.large}
-          alt={card.name}
-          width="100%"
-          height="140%"
-          layout="responsive"
-          priority
-        />
+        <Image src={card.images.large} alt={card.name} width="100%" height="140%" layout="responsive" priority />
       </div>
 
       <div className={styles.cardData}>

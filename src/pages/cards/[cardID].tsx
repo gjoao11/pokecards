@@ -1,6 +1,6 @@
-import { BackPageButton } from '@components/BackPageButton';
-import { PokemonCardDetails } from '@components/CardDetails/PokemonCardDetails';
-import { api } from '@services/api';
+import { BackPageButton } from '@/components/BackPageButton';
+import { PokemonCardDetails } from '@/components/CardDetails/PokemonCardDetails';
+import { api } from '@/services/api';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import { Card as CardType } from 'src/types';

@@ -11,13 +11,7 @@ export function CardItem({ card }: CardItemProps) {
 
   return (
     <div className={`${styles.cardItemContainer} ${styles[mainType]}`}>
-      <Image
-        src={card.images.small}
-        alt={card.name}
-        width="100%"
-        height="140%"
-        layout="responsive"
-      />
+      <Image src={card.images.small} alt={card.name} width="100%" height="140%" layout="responsive" />
     </div>
   );
 }

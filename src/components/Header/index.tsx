@@ -1,11 +1,11 @@
-import styles from './styles.module.scss'
+import { HeaderContainer, HeaderContent } from './styles';
 
 export function Header() {
   return (
-    <header className={styles.headerContainer}>
-      <div className={styles.headerContent}>
-        <strong className={styles.logo}>PokéCards</strong>
-      </div>
-    </header>
-  )
+    <HeaderContainer>
+      <HeaderContent>
+        <strong className="logo">PokéCards</strong>
+      </HeaderContent>
+    </HeaderContainer>
+  );
 }

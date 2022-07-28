@@ -1,14 +1,16 @@
-import { SetItem } from '@components/SetItem';
-import { SetList } from '@components/SetList';
-import { useIntersectionObserver } from '@hooks/useIntersectionObserver';
-import { api, apiRoutes } from '@services/api';
-import { GetStaticProps } from 'next';
+import { Container } from '@/components/common/Container';
+import { LoadMoreButton } from '@/components/common/LoadMoreButton';
+import { Text } from '@/components/common/Text';
+import { SetList } from '@/components/pages/home/SetList';
+import { SetItem } from '@/components/SetItem';
+import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
+import { api, apiRoutes } from '@/services/api';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useMemo, useRef } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
-import { Set as SetType } from 'src/types';
-import styles from './Home.module.scss';
+import { PokemonTCGAPIRes, Set as SetType } from 'src/types';
 
 interface PageData {
   data: SetType[];
@@ -20,7 +22,9 @@ interface HomeProps {
   initialSets: PageData;
 }
 
-export default function Home({ initialSets }: HomeProps) {
+const Home: NextPage<HomeProps> = ({ initialSets }) => {
+  const numberOfPages = Math.ceil(initialSets.totalCount / 12);
+
   const fetchSets = async ({ pageParam = 1 }): Promise<PageData> => {
     const response = await apiRoutes.get('/api/sets', {
       params: {
@@ -31,15 +35,11 @@ export default function Home({ initialSets }: HomeProps) {
     return response.data;
   };
 
-  const { data, isError, isFetchingNextPage, fetchNextPage, hasNextPage } =
-    useInfiniteQuery(['sets'], fetchSets, {
-      getNextPageParam: lastPage => {
-        const numberOfPages = Math.ceil(lastPage.totalCount / 12);
-        return lastPage.page < numberOfPages ? lastPage.page + 1 : null;
-      },
-      staleTime: 1000 * 60 * 60 * 24, // 24 hours
-      initialData: { pages: [initialSets], pageParams: [1] },
-    });
+  const { data, isError, isFetchingNextPage, fetchNextPage, hasNextPage } = useInfiniteQuery(['sets'], fetchSets, {
+    getNextPageParam: lastPage => (lastPage.page < numberOfPages ? lastPage.page + 1 : null),
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours
+    initialData: { pages: [initialSets], pageParams: [1] },
+  });
 
   const updatedSets = useMemo(() => {
     const formattedArray = data?.pages?.map(page => page.data).flat();
@@ -62,44 +62,44 @@ export default function Home({ initialSets }: HomeProps) {
   return (
     <>
       <Head>
-        <title>Sets - PokéCards</title>
+        <title>Expansions - PokéCards</title>
+        <meta name="description" content="List of Pokémon TCG expansions and sets." />
       </Head>
 
-      <div className={styles.container}>
-        <main className={styles.contentContainer}>
-          <h1>Pokémon TCG sets</h1>
+      <Container css={{ display: 'flex', flexDirection: 'column', gap: '$8' }}>
+        <Text as="h1" size="4">
+          Pokémon TCG expansions
+        </Text>
 
-          <SetList>
-            {updatedSets?.map(set => (
-              <Link key={set.id} href={`/sets/${set.id}`} prefetch={false}>
-                <a>
-                  <SetItem set={set} />
-                </a>
-              </Link>
-            ))}
-          </SetList>
+        <SetList>
+          {updatedSets?.map(set => (
+            <Link key={set.id} href={`/sets/${set.id}`} prefetch={false}>
+              <a>
+                <SetItem set={set} />
+              </a>
+            </Link>
+          ))}
+        </SetList>
 
-          <div>
-            <button
-              ref={infiniteScrollRef}
-              onClick={() => fetchNextPage()}
-              disabled={!hasNextPage || isFetchingNextPage}
-            >
-              {isFetchingNextPage
-                ? 'Loading more...'
-                : hasNextPage
-                ? 'Load Newer'
-                : 'Nothing more to load'}
-            </button>
-          </div>
-        </main>
-      </div>
+        <div>
+          <LoadMoreButton
+            ref={infiniteScrollRef}
+            type="button"
+            onClick={() => fetchNextPage()}
+            disabled={!hasNextPage || isFetchingNextPage}
+          >
+            {isFetchingNextPage ? 'Loading more...' : hasNextPage ? 'Load Newer' : 'Nothing more to load'}
+          </LoadMoreButton>
+        </div>
+      </Container>
     </>
   );
-}
+};
+
+export default Home;
 
 export const getStaticProps: GetStaticProps = async () => {
-  const response = await api.get('sets', {
+  const response = await api.get<PokemonTCGAPIRes<SetType[]>>('sets', {
     params: {
       pageSize: 12,
       page: 1,

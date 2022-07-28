@@ -1,5 +1,6 @@
+import { useImageShimmer } from '@/hooks/useImageShimmer';
 import Image from 'next/image';
-import styles from './styles.module.scss';
+import { CardNumber, MainSetInfoContent, SetInfo, SetItemContainer, SetLogo, SetSymbol } from './styles';
 
 interface Set {
   id: string;
@@ -17,37 +18,50 @@ interface SetItemProps {
 }
 
 export function SetItem({ set }: SetItemProps) {
+  const logoShimmer = useImageShimmer(192, 64);
+  const symbolShimmer = useImageShimmer(32, 32);
+
   return (
-    <div className={styles.setItemContainer}>
-      <div className={styles.leftSideContainer}>
-        <div className={styles.setLogoContainer}>
+    <SetItemContainer>
+      <div>
+        <SetLogo css={{ '@bp1': { display: 'none' } }}>
           <Image
             src={set.images.logo}
             alt={set.name}
-            layout="fill"
+            width={192}
+            height={64}
+            layout="responsive"
             objectFit="contain"
+            loading="lazy"
+            placeholder="blur"
+            blurDataURL={logoShimmer}
           />
-        </div>
+        </SetLogo>
 
-        <div className={styles.setSymbolContainer}>
+        <SetSymbol css={{ '@bp1': { display: 'block' } }}>
           <Image
             src={set.images.symbol}
             alt={set.name}
-            layout="fill"
+            width={32}
+            height={32}
+            layout="responsive"
             objectFit="contain"
+            loading="lazy"
+            placeholder="blur"
+            blurDataURL={symbolShimmer}
           />
-        </div>
+        </SetSymbol>
 
-        <div className={styles.setInfo}>
-          <strong>{set.name}</strong>
+        <SetInfo>
+          <MainSetInfoContent>
+            <strong>{set.name}</strong>
 
-          <span>{set.series} Series</span>
-        </div>
+            <p>{set.series} series</p>
+          </MainSetInfoContent>
+        </SetInfo>
       </div>
 
-      <div className={styles.rightSideContainer}>
-        <span>{set.total} cards total</span>
-      </div>
-    </div>
+      <CardNumber>{set.total} cards total</CardNumber>
+    </SetItemContainer>
   );
 }

@@ -1,4 +1,4 @@
-import { api } from '@services/api';
+import { api } from '@/services/api';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function Sets(req: NextApiRequest, res: NextApiResponse) {

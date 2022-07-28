@@ -72,3 +72,11 @@ export interface Set {
     logo: string;
   };
 }
+
+export interface PokemonTCGAPIRes<T> {
+  data: T;
+  page: number;
+  pageSize: number;
+  count: number;
+  totalCount: number;
+}
