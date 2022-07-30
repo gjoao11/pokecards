@@ -1,5 +1,5 @@
-import { BackPageButton } from '@/components/BackPageButton';
-import { CardItem } from '@/components/CardItem';
+import { BackPageButton } from '@/components/common/BackPageButton';
+import { CardItem } from '@/components/pages/sets/CardItem';
 import { Container } from '@/components/common/Container';
 import { Text } from '@/components/common/Text';
 import { CardList } from '@/components/pages/sets/CardList';

@@ -2,7 +2,7 @@ import { Container } from '@/components/common/Container';
 import { LoadMoreButton } from '@/components/common/LoadMoreButton';
 import { Text } from '@/components/common/Text';
 import { SetList } from '@/components/pages/home/SetList';
-import { SetItem } from '@/components/SetItem';
+import { SetItem } from '@/components/pages/home/SetItem';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { api, apiRoutes } from '@/services/api';
 import { PokemonTCGAPIRes, Set as SetType } from '@/types';

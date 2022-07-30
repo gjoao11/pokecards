@@ -1,4 +1,4 @@
-import { BackPageButton } from '@/components/BackPageButton';
+import { BackPageButton } from '@/components/common/BackPageButton';
 import { PokemonCardDetails } from '@/components/CardDetails/PokemonCardDetails';
 import { api } from '@/services/api';
 import { GetStaticPaths, GetStaticProps } from 'next';
