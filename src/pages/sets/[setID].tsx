@@ -1,12 +1,13 @@
 import { BackPageButton } from '@/components/BackPageButton';
 import { CardItem } from '@/components/CardItem';
-import { CardList } from '@/components/CardList';
+import { Container } from '@/components/common/Container';
+import { Text } from '@/components/common/Text';
+import { CardList } from '@/components/pages/sets/CardList';
 import { api } from '@/services/api';
+import { Card as CardType, PokemonTCGAPIRes, Set as SetType } from '@/types';
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
-import { Card as CardType, Set as SetType } from 'src/types';
-import styles from './Set.module.scss';
 
 interface SetProps {
   set: SetType;
@@ -17,30 +18,28 @@ export default function Set({ set, cards }: SetProps) {
   return (
     <>
       <Head>
-        <title>{set.name} - PokéCards</title>
+        <title>{`${set.name} - PokéCards`}</title>
       </Head>
 
-      <div className={styles.container}>
+      <Container css={{ display: 'flex', flexDirection: 'column', gap: '$8' }}>
         <div>
           <BackPageButton />
         </div>
 
-        <main className={styles.contentContainer}>
-          <h1>
-            {set.series} - {set.name}
-          </h1>
+        <Text as="h1" size="4">
+          {set.series} - {set.name}
+        </Text>
 
-          <CardList>
-            {cards?.map(card => (
-              <Link key={card.id} href={`/cards/${card.id}`} prefetch={false}>
-                <a>
-                  <CardItem card={card} />
-                </a>
-              </Link>
-            ))}
-          </CardList>
-        </main>
-      </div>
+        <CardList>
+          {cards?.map(card => (
+            <Link key={card.id} href={`/cards/${card.id}`} prefetch={false}>
+              <a>
+                <CardItem card={card} />
+              </a>
+            </Link>
+          ))}
+        </CardList>
+      </Container>
     </>
   );
 }
@@ -56,30 +55,25 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const setID = params?.setID;
 
   try {
-    const { data: setResponse } = await api.get(`sets/${String(setID)}`);
-    const set: SetType = await setResponse.data;
+    const { data: setResponse } = await api.get<{ data: SetType }>(`sets/${String(setID)}`);
+    const set = setResponse.data;
 
-    const { data: cardsResponse } = await api.get('cards', {
-      params: {
-        q: `set.id:${set.id}`,
-        orderBy: 'number',
-        page: 1,
-      },
-    });
-    let cards: CardType[] = await cardsResponse.data;
+    const cards: CardType[] = [];
 
-    if (cards.length < set.total) {
-      const restOfCardsResponse = await api.get('cards', {
+    for (let i = 1; i >= 1; i += 1) {
+      const { data: cardsResponse } = await api.get<PokemonTCGAPIRes<CardType[]>>('cards', {
         params: {
           q: `set.id:${set.id}`,
           orderBy: 'number',
-          page: 2,
+          page: i,
         },
       });
 
-      const { data: restOfCards } = await restOfCardsResponse.data;
+      cards.push(...cardsResponse.data);
 
-      cards = [...cards, ...restOfCards];
+      if (cards.length >= cardsResponse.totalCount) {
+        i = -1;
+      }
     }
 
     return {
@@ -92,7 +86,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   } catch {
     return {
       notFound: true,
-      revalidate: 60, // 1 minute
+      revalidate: 10, // 10 seconds
     };
   }
 };

@@ -5,18 +5,14 @@ import { SetList } from '@/components/pages/home/SetList';
 import { SetItem } from '@/components/SetItem';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { api, apiRoutes } from '@/services/api';
+import { PokemonTCGAPIRes, Set as SetType } from '@/types';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useMemo, useRef } from 'react';
-import { PokemonTCGAPIRes, Set as SetType } from 'src/types';
 
-interface PageData {
-  data: SetType[];
-  page: number;
-  totalCount: number;
-}
+type PageData = PokemonTCGAPIRes<SetType[]>;
 
 interface HomeProps {
   initialSets: PageData;
@@ -26,7 +22,7 @@ const Home: NextPage<HomeProps> = ({ initialSets }) => {
   const numberOfPages = Math.ceil(initialSets.totalCount / 12);
 
   const fetchSets = async ({ pageParam = 1 }): Promise<PageData> => {
-    const response = await apiRoutes.get('/api/sets', {
+    const response = await apiRoutes.get<PokemonTCGAPIRes<SetType[]>>('/api/sets', {
       params: {
         page: pageParam,
       },

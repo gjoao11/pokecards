@@ -1,14 +1,14 @@
 import { useRouter } from 'next/router';
-import { MdArrowBack } from 'react-icons/md';
-import styles from './styles.module.scss';
+import { ArrowLeft } from 'phosphor-react';
+import { BackPageButtonContainer } from './styles';
 
 export function BackPageButton() {
   const { back } = useRouter();
 
   return (
-    <button className={styles.container} onClick={back}>
-      <MdArrowBack size={22} color="#e2e2e6" />
+    <BackPageButtonContainer type="button" onClick={back}>
+      <ArrowLeft size={20} weight="bold" />
       <span>Back</span>
-    </button>
+    </BackPageButtonContainer>
   );
 }

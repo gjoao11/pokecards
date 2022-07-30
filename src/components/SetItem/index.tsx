@@ -19,7 +19,6 @@ interface SetItemProps {
 
 export function SetItem({ set }: SetItemProps) {
   const logoShimmer = useImageShimmer(192, 64);
-  const symbolShimmer = useImageShimmer(32, 32);
 
   return (
     <SetItemContainer>
@@ -47,8 +46,6 @@ export function SetItem({ set }: SetItemProps) {
             layout="responsive"
             objectFit="contain"
             loading="lazy"
-            placeholder="blur"
-            blurDataURL={symbolShimmer}
           />
         </SetSymbol>
 

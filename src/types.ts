@@ -73,7 +73,7 @@ export interface Set {
   };
 }
 
-export interface PokemonTCGAPIRes<T> {
+export interface PokemonTCGAPIRes<T = any> {
   data: T;
   page: number;
   pageSize: number;
