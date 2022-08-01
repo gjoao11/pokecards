@@ -1,11 +1,11 @@
 import { BackPageButton } from '@/components/common/BackPageButton';
-import { CardItem } from '@/components/pages/sets/CardItem';
 import { Container } from '@/components/common/Container';
 import { Text } from '@/components/common/Text';
+import { CardItem } from '@/components/pages/sets/CardItem';
 import { CardList } from '@/components/pages/sets/CardList';
 import { api } from '@/services/api';
 import { Card as CardType, PokemonTCGAPIRes, Set as SetType } from '@/types';
-import { GetStaticPaths, GetStaticProps } from 'next';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 
@@ -14,7 +14,7 @@ interface SetProps {
   cards?: CardType[];
 }
 
-export default function Set({ set, cards }: SetProps) {
+const Set: NextPage<SetProps> = ({ set, cards }) => {
   return (
     <>
       <Head>
@@ -42,7 +42,9 @@ export default function Set({ set, cards }: SetProps) {
       </Container>
     </>
   );
-}
+};
+
+export default Set;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {

@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import styles from './styles.module.scss';
+import { AbilityTag, CardDetailsBodyContainer, InfoBox, InfoText, InfoTitle, MoveCost, MoveDamage } from './styles';
 
 interface CardDetailsBodyProps {
   card: {
@@ -18,50 +18,54 @@ interface CardDetailsBodyProps {
   };
 }
 
-export function CardDetailsBody({ card }: CardDetailsBodyProps) {
+export const CardDetailsBody: React.FC<CardDetailsBodyProps> = ({ card }) => {
   return (
-    <div className={styles.container}>
+    <CardDetailsBodyContainer>
       {!!card.rules &&
-        card.rules?.map((rule, index) => (
-          <div key={index}>
-            <span className={styles.text}>{rule}</span>
-          </div>
+        card.rules?.map(rule => (
+          <InfoBox key={rule}>
+            <InfoText>{rule}</InfoText>
+          </InfoBox>
         ))}
 
       {!!card.abilities &&
-        card.abilities?.map((ability, index) => (
-          <div key={index}>
-            <div className={styles.title}>
-              <span className={styles.abilityTag}>{`[ ${ability.type} ]`}</span>
-              <span>{ability.name}</span>
-            </div>
-            <span className={styles.text}>{ability.text}</span>
-          </div>
+        card.abilities?.map(ability => (
+          <InfoBox key={ability.name}>
+            <InfoTitle>
+              <AbilityTag>{ability.type}</AbilityTag>
+              {ability.name}
+            </InfoTitle>
+
+            <InfoText>{ability.text}</InfoText>
+          </InfoBox>
         ))}
 
       {!!card.attacks &&
-        card.attacks?.map((attack, index) => (
-          <div key={index}>
-            <div className={styles.title}>
-              <span className={styles.cost}>
+        card.attacks?.map(attack => (
+          <InfoBox key={attack.name}>
+            <InfoTitle>
+              <MoveCost>
                 {attack?.cost.map((energy, index) => (
                   <Image
                     key={index}
                     src={`/images/energy-types/${energy}.png`}
                     alt={energy}
-                    width="25px"
-                    height="25px"
+                    width={25}
+                    height={25}
+                    loading="lazy"
+                    title={energy}
                   />
                 ))}
-              </span>
-              <span>{attack?.name}</span>
-              <span className={styles.damage}>{attack?.damage}</span>
-            </div>
-            {!!attack.text && (
-              <span className={styles.text}>{attack?.text}</span>
-            )}
-          </div>
+              </MoveCost>
+
+              {attack?.name}
+
+              <MoveDamage>{attack?.damage}</MoveDamage>
+            </InfoTitle>
+
+            {!!attack.text && <InfoText>{attack?.text}</InfoText>}
+          </InfoBox>
         ))}
-    </div>
+    </CardDetailsBodyContainer>
   );
-}
+};

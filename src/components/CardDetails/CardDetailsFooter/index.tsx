@@ -1,6 +1,13 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import styles from './styles.module.scss';
+import {
+  CardDetailsFooterContainer,
+  CardExpansion,
+  DetailsGrid,
+  DetailsGridItem,
+  PokemonCardStat,
+  PokemonCardStats,
+} from './styles';
 
 interface CardDetailsFooterProps {
   card: {
@@ -25,110 +32,108 @@ interface CardDetailsFooterProps {
         symbol: string;
       };
     };
-    regulationMark: string;
   };
 }
 
-export function CardDetailsFooter({ card }: CardDetailsFooterProps) {
+export const CardDetailsFooter: React.FC<CardDetailsFooterProps> = ({ card }) => {
   return (
-    <div className={styles.container}>
+    <CardDetailsFooterContainer>
       {card.supertype === 'Pokémon' && (
-        <div className={styles.stats}>
+        <PokemonCardStats>
           {!!card.weaknesses &&
             card.weaknesses.map(weakness => (
-              <div key={weakness.type} className={styles.stat}>
-                <span>Weakness</span>
+              <PokemonCardStat key={weakness.type}>
+                <p>Weakness</p>
                 <span>
                   <Image
                     src={`/images/energy-types/${weakness.type}.png`}
                     alt={weakness.type}
-                    width="25px"
-                    height="25px"
+                    width={25}
+                    height={25}
+                    loading="lazy"
+                    title={weakness.type}
                   />
                   {weakness.value}
                 </span>
-              </div>
+              </PokemonCardStat>
             ))}
 
           {!!card.resistances &&
             card.resistances.map(resistance => (
-              <div key={resistance.type} className={styles.stat}>
-                <span>Resistance</span>
+              <PokemonCardStat key={resistance.type}>
+                <p>Resistance</p>
                 <span>
                   <Image
                     src={`/images/energy-types/${resistance.type}.png`}
                     alt={resistance.type}
-                    width="25px"
-                    height="25px"
+                    width={25}
+                    height={25}
+                    loading="lazy"
+                    title={resistance.type}
                   />
                   {resistance.value}
                 </span>
-              </div>
+              </PokemonCardStat>
             ))}
 
           {!!card.retreatCost && (
-            <div className={styles.stat}>
-              <span>Retreat</span>
+            <PokemonCardStat>
+              <p>Retreat</p>
               <span>
                 {card.retreatCost.map((energyType, index) => (
                   <Image
                     key={index}
                     src={`/images/energy-types/${energyType}.png`}
                     alt={energyType}
-                    width="25px"
-                    height="25px"
+                    width={25}
+                    height={25}
+                    loading="lazy"
+                    title={energyType}
                   />
                 ))}
               </span>
-            </div>
+            </PokemonCardStat>
           )}
-        </div>
+        </PokemonCardStats>
       )}
 
-      <div className={styles.info}>
-        <div>
-          <span>Expansion</span>
-          <span>
-            <Link href={`/sets/${card.set.id}`}>
-              <a>
-                <Image
-                  src={card.set.images.symbol}
-                  alt={card.set.name}
-                  width={16}
-                  height={16}
-                  objectFit="scale-down"
-                />
-                {card.set.name}
-              </a>
-            </Link>
-          </span>
-        </div>
+      <CardExpansion>
+        <h3>Expansion</h3>
+        <p>
+          <Link href={`/sets/${card.set.id}`}>
+            <a>
+              <Image
+                src={card.set.images.symbol}
+                alt={card.set.name}
+                width={16}
+                height={16}
+                objectFit="contain"
+                loading="lazy"
+              />
+              {card.set.name}
+            </a>
+          </Link>
+        </p>
+      </CardExpansion>
 
-        <div>
-          <span>Number</span>
-          <span>
-            {card.number.padStart(3, '0')}/
-            {card.set.printedTotal.toString().padStart(3, '0')}
-          </span>
-        </div>
+      <DetailsGrid>
+        <DetailsGridItem>
+          <h3>Illustrator</h3>
+          <p>{card.artist}</p>
+        </DetailsGridItem>
 
-        <div>
-          <span>Rarity</span>
-          <span>{card.rarity}</span>
-        </div>
+        <DetailsGridItem>
+          <h3>Number</h3>
+          <p>
+            {card.number.padStart(3, '0')}/{card.set.printedTotal.toString().padStart(3, '0')}
+          </p>
+        </DetailsGridItem>
 
-        <div>
-          <span>Illustrator</span>
-          <span>{card.artist}</span>
-        </div>
-
-        {!!card.regulationMark && (
-          <div>
-            <span>Mark</span>
-            <span>{card.regulationMark}</span>
-          </div>
-        )}
-      </div>
-    </div>
+        <DetailsGridItem>
+          <h3>Rarity</h3>
+          <p>{card.rarity}</p>
+        </DetailsGridItem>
+      </DetailsGrid>
+    </CardDetailsFooterContainer>
   );
-}
+};

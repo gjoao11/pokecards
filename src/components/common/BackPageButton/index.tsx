@@ -7,7 +7,7 @@ export function BackPageButton() {
 
   return (
     <BackPageButtonContainer type="button" onClick={back}>
-      <ArrowLeft size={20} weight="bold" />
+      <ArrowLeft size={16} weight="bold" />
       <span>Back</span>
     </BackPageButtonContainer>
   );

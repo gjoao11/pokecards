@@ -1,5 +1,6 @@
+import { Text } from '@/components/common/Text';
 import Image from 'next/image';
-import styles from './styles.module.scss';
+import { CardDetailsHeaderContainer, CardInfoContainer, PokemonCardInfoContainer } from './styles';
 
 interface CardDetailsHeaderProps {
   card: {
@@ -11,40 +12,44 @@ interface CardDetailsHeaderProps {
   };
 }
 
-export function CardDetailsHeader({ card }: CardDetailsHeaderProps) {
+export const CardDetailsHeader: React.FC<CardDetailsHeaderProps> = ({ card }) => {
   return (
-    <div className={styles.container}>
-      <div className={styles.cardTitle}>
-        <h1>{card.name}</h1>
+    <CardDetailsHeaderContainer>
+      <CardInfoContainer>
+        <Text as="h1" size={4}>
+          {card.name}
+        </Text>
         <div>
-          <span>{card.supertype}</span>
+          <p>{card.supertype}</p>
           {!!card.subtypes && <span>&nbsp;-&nbsp;</span>}
           {card.subtypes?.map((subtype, index) => (
-            <span key={subtype}>
+            <p key={subtype}>
               {subtype}
               {card.subtypes.length - 1 !== index && <>,&nbsp;</>}
-            </span>
+            </p>
           ))}
         </div>
-      </div>
+      </CardInfoContainer>
 
       {card.supertype === 'Pokémon' && (
-        <div className={styles.cardHP}>
-          <span>
+        <PokemonCardInfoContainer>
+          <p>
             HP <span>{card.hp}</span>
-          </span>
+          </p>
 
           {card.types?.map(type => (
             <Image
               key={type}
               src={`/images/energy-types/${type}.png`}
               alt={type}
-              width="25px"
-              height="25px"
+              width={25}
+              height={25}
+              loading="lazy"
+              title={type}
             />
           ))}
-        </div>
+        </PokemonCardInfoContainer>
       )}
-    </div>
+    </CardDetailsHeaderContainer>
   );
-}
+};

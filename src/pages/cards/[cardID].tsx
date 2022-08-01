@@ -1,36 +1,38 @@
+import { CardDetails } from '@/components/CardDetails';
 import { BackPageButton } from '@/components/common/BackPageButton';
-import { PokemonCardDetails } from '@/components/CardDetails/PokemonCardDetails';
+import { Container } from '@/components/common/Container';
 import { api } from '@/services/api';
-import { GetStaticPaths, GetStaticProps } from 'next';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import Head from 'next/head';
 import { Card as CardType } from 'src/types';
-import styles from './Card.module.scss';
 
 interface CardPageProps {
   card: CardType;
 }
 
-export default function CardPage({ card }: CardPageProps) {
+const Card: NextPage<CardPageProps> = ({ card }) => {
   return (
     <>
       <Head>
-        <title>
-          {card.name} - {card.set.name} - PokéCards
-        </title>
+        <title>{`${card.name} - ${card.set.name} - PokéCards`}</title>
+        <meta
+          name="description"
+          content={`Pokémon TCG ${card.name} ${card.supertype} card.${card.flavorText ? ` ${card.flavorText}` : ''}`}
+        />
       </Head>
 
-      <div className={styles.container}>
+      <Container css={{ display: 'flex', flexDirection: 'column', gap: '$8' }}>
         <div>
           <BackPageButton />
         </div>
 
-        <main className={styles.contentContainer}>
-          <PokemonCardDetails card={card} />
-        </main>
-      </div>
+        <CardDetails card={card} />
+      </Container>
     </>
   );
-}
+};
+
+export default Card;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
@@ -43,8 +45,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const cardID = params?.cardID;
 
   try {
-    const { data: response } = await api.get(`cards/${String(cardID)}`);
-    const card: CardType = await response.data;
+    const { data: response } = await api.get<{ data: CardType }>(`cards/${String(cardID)}`);
+    const card = response.data;
 
     return {
       props: {
@@ -55,7 +57,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   } catch {
     return {
       notFound: true,
-      revalidate: 60, // 1 minute
+      revalidate: 10, // 10 seconds
     };
   }
 };

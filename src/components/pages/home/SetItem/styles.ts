@@ -32,7 +32,7 @@ export const SetItemContainer = styled('div', {
     gap: '$4',
   },
 
-  '@media (max-width: 640px)': {
+  '@bp1': {
     flexDirection: 'column',
     alignItems: 'flex-start',
   },
